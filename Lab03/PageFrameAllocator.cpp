@@ -13,14 +13,15 @@ PageFrameAllocator::PageFrameAllocator(int numPageFrames) {
     int totalSize = numPageFrames * 0x1000;
     PageFrameAllocator::memory.resize(totalSize); //Resizes memory
     
-    PageFrameAllocator::free_list_head = 0xFFFFFFFF //Building free list
-    PageFrameAllocator::page_frames_free = totalSize;  
-    PageFrameAllocator::page_frames_total = totalSize;
+    PageFrameAllocator::freeListHead = 0xFFFFFFFF //Building free list
+    PageFrameAllocator::pageFramesFree = totalSize;  
+    PageFrameAllocator::pageFramesTotal = totalSize;
 }
 
 PageFrameAllocator::PageFrameAllocator(const PageFrameAllocator& orig) {
 }
 
 PageFrameAllocator::~PageFrameAllocator() {
+    
 }
 
