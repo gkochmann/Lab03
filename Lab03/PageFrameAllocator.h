@@ -13,6 +13,7 @@ using namespace std;
 #include <vector>
 #include <cstring>
 #include <fstream>
+#include <iostream>
 
 class PageFrameAllocator {
 public:
@@ -28,6 +29,7 @@ public:
     
     bool Allocate(uint32_t count, std::vector<uint32_t> &page_frames);
     bool Deallocate(uint32_t count, std::vector<uint32_t> &page_frames);
+    void updateFreeListHead();
     
     //Getters
     uint32_t getPageFramesFree() const { return pageFramesFree; }
