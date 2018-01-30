@@ -38,8 +38,8 @@ bool PageFrameAllocator::Allocate(uint32_t count, std::vector<uint32_t> &page_fr
                 setPageFramesFree(pageFramesFree - 1); //Removing 1 free page frame
             }
         } else {
-            return false;
-        } //Not enough frames free so page frames allocated
+            return false; //Not enough frames free so nothing allocated
+        } 
         
     return true;
 }
@@ -51,9 +51,7 @@ void PageFrameAllocator::updateFreeListHead() {
 bool PageFrameAllocator::Deallocate(uint32_t count, std::vector<uint32_t> &page_frames) {
     if (count <= page_frames.size()) {
         for (int i = 0; i < count; i++) {
-            //uint32_t temp = page_frames[i];
-            memory.push_back(page_frames[i]);
-           
+            memory.push_back(page_frames[i]);          
             page_frames.pop_back();
             setPageFramesFree(pageFramesFree + 1); //Adding 1 free page frame
         }
