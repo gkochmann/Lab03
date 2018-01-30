@@ -30,17 +30,17 @@ PageFrameAllocator::PageFrameAllocator(int numPageFrames) {
 }
 
 bool PageFrameAllocator::Allocate(uint32_t count, std::vector<uint32_t> &page_frames) {
-            if (PageFrameAllocator::getPageFramesFree() < count){ 
-            std::cout << "Not enough pageFrames" << endl;
+        if (getPageFramesFree() >= count){ 
+            for(int i = count; i > 0; i--){
+                page_frames.push_back(memory[i * 0x1000]); //Add page frame to the allocated vector
+                memory.pop_back();//[i * 0x1000]; //Erasing head
+                updateFreeListHead(); //Updating head
+                setPageFramesFree(pageFramesFree - 1); //Removing 1 free page frame
+            }
+        } else {
             return false;
         } //Not enough frames free so page frames allocated
-        std::cout << "IN ALLOCATOR, count: " << count << endl;
-        for(int i = count; i > 0; i--){
-            cout << "memory: " << memory[freeListHead] << endl;
-            page_frames.push_back(memory[freeListHead]); //Add page frame to the allocated vector
-            memory[freeListHead] = NULL; //Erasing head
-            updateFreeListHead(); //Updating head
-        }
+        
     return true;
 }
 
@@ -50,10 +50,12 @@ void PageFrameAllocator::updateFreeListHead() {
 
 bool PageFrameAllocator::Deallocate(uint32_t count, std::vector<uint32_t> &page_frames) {
     if (count <= page_frames.size()) {
-        for (int i = 0; i < count*0x1000; i++) {
-            uint32_t temp = page_frames[i];
-            memory.push_back(temp);
+        for (int i = 0; i < count; i++) {
+            //uint32_t temp = page_frames[i];
+            memory.push_back(page_frames[i]);
+           
             page_frames.pop_back();
+            setPageFramesFree(pageFramesFree + 1); //Adding 1 free page frame
         }
         return true;
     } else {

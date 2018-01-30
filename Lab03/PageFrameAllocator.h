@@ -35,6 +35,9 @@ public:
     uint32_t getPageFramesFree() const { return pageFramesFree; }
     uint32_t getPageFramesTotal() const { return pageFramesTotal; }
     
+    //Setters
+    void setPageFramesFree(uint32_t newFrames) {pageFramesFree = newFrames;}
+    
 private:
     std::vector<uint8_t> memory; //Byte array that contains page frames to be managed
     uint32_t pageFramesTotal; //A count of the total number of page frames in memory (memory size divided by 0x1000)

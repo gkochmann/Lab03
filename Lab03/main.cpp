@@ -29,16 +29,17 @@ int main(int argc, char** argv) {
     ofstream outFile("outputtest.txt");
     int numPageFrames;
     inFile >> std::hex >> numPageFrames;
-    outFile << ">" << numPageFrames << endl;
+    outFile << std::hex << ">" << numPageFrames << endl;
     PageFrameAllocator *pageFrameAl = new PageFrameAllocator(numPageFrames);
     
     int tempNum, count;
     std::vector<uint32_t> allocated;
     if (outFile.is_open()) {
         while (inFile >> tempNum) {
-            outFile << ">" << tempNum << endl;
+            outFile << std::hex << ">" << tempNum << " ";
             if (tempNum == 0) {
                 inFile >> count;
+                outFile << count << endl;
                 bool check = pageFrameAl->Deallocate(count, allocated);
                 if (check)
                     outFile << " T " << pageFrameAl->getPageFramesFree() << endl;
@@ -47,9 +48,15 @@ int main(int argc, char** argv) {
             }
             else if (tempNum == 1) {
                 inFile >> count;
-                pageFrameAl->Allocate(count, allocated);
+                outFile << count << endl;
+                bool check = pageFrameAl->Allocate(count, allocated);
+                if (check)
+                    outFile << " T " << pageFrameAl->getPageFramesFree() << endl;
+                else
+                    outFile << " F " << pageFrameAl->getPageFramesFree() << endl;
             }
             else if (tempNum == 2) {
+                outFile << endl;
                 for (int i = 0; i < pageFrameAl->getPageFramesFree(); i++) {
                     outFile << " " << i;
                 }
