@@ -7,11 +7,19 @@
 
 #ifndef PAGEFRAMEALLOCATOR_H
 #define PAGEFRAMEALLOCATOR_H
+using namespace std;
+
+#include <iostream>
+#include <vector>
+#include <cstring>
+#include <fstream>
 
 class PageFrameAllocator {
 public:
     PageFrameAllocator(int numPageFrames);
-    ~PageFrameAllocator();
+    ~PageFrameAllocator() {
+        // implement this bitch
+    };
     
     PageFrameAllocator(const PageFrameAllocator& orig) = delete; // Class does not allow copy/move constructors/assignments
     PageFrameAllocator(PageFrameAllocator&& other) = delete;
@@ -21,7 +29,7 @@ public:
     bool Allocate(uint32_t count, std::vector<uint32_t> &page_frames);
     bool Deallocate(uint32_t count, std::vector<uint32_t> &page_frames);
     
-    //Gettters
+    //Getters
     uint32_t getPageFramesFree() const { return pageFramesFree; }
     uint32_t getPageFramesTotal() const { return pageFramesTotal; }
     
