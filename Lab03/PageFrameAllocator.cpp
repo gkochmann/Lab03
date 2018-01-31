@@ -8,6 +8,11 @@
 #include <vector>
 #include "PageFrameAllocator.h"
 
+/**
+   * PageFrameAllocator - Constructor for PageFrameAllocator object
+   * 
+   * @param numPageFrames     the number of page frames to be created, determined by the first line of the text file
+   */
 PageFrameAllocator::PageFrameAllocator(int numPageFrames) {
     int totalSize = numPageFrames * 0x1000;
     memory.resize(totalSize, 0); //Resizes memory
@@ -29,25 +34,41 @@ PageFrameAllocator::PageFrameAllocator(int numPageFrames) {
     pageFramesTotal = numPageFrames;
 }
 
+/**
+   * Allocate - pushes the numbers of all the allocated page frames onto the back of the vector page_frames
+   * 
+   * @param count             number of page frames to allocate/push
+   * @param &page_frames      vector of the page frames that are pushed/popped
+   * @return                  true if there are enough free frames to be allocated, false is not
+   */
 bool PageFrameAllocator::Allocate(uint32_t count, std::vector<uint32_t> &page_frames) {
-        if (getPageFramesFree() >= count){ 
-            for(int i = count; i > 0; i--){
-                page_frames.push_back(memory[i * 0x1000]); //Add page frame to the allocated vector
-                memory.pop_back();//[i * 0x1000]; //Erasing head
-                updateFreeListHead(); //Updating head
-                setPageFramesFree(pageFramesFree - 1); //Removing 1 free page frame
-            }
-        } else {
-            return false; //Not enough frames free so nothing allocated
-        } 
-        
+    if (getPageFramesFree() >= count){ 
+        for(int i = count; i > 0; i--){
+            page_frames.push_back(memory[i * 0x1000]); //Add page frame to the allocated vector
+            memory.pop_back();//[i * 0x1000]; //Erasing head
+            updateFreeListHead(); //Updating head
+            setPageFramesFree(pageFramesFree - 1); //Removing 1 free page frame
+        }
+    } else {
+        return false; //Not enough frames free so nothing allocated
+    } 
     return true;
 }
 
+/**
+   * updateFreeListHead() - helper method to update the head of the list
+   */
 void PageFrameAllocator::updateFreeListHead() {
     freeListHead -= 0x1000;
 }
 
+/**
+   * Deallocate - pops the page frames from the back of the vector and returns them to the free list.
+   * 
+   * @param count             number of page frames to deallocate/pop
+   * @param &page_frames      vector of the page frames that are pushed/popped
+   * @return                  true if there are enough free frames to be deallocated, false is not
+   */
 bool PageFrameAllocator::Deallocate(uint32_t count, std::vector<uint32_t> &page_frames) {
     if (count <= page_frames.size()) {
         for (int i = 0; i < count; i++) {
