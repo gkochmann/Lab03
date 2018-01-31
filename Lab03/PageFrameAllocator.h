@@ -18,9 +18,7 @@ using namespace std;
 class PageFrameAllocator {
 public:
     PageFrameAllocator(int numPageFrames);
-    ~PageFrameAllocator() {
-        // implement this bitch
-    };
+    ~PageFrameAllocator(){};
     
     PageFrameAllocator(const PageFrameAllocator& orig) = delete; // Class does not allow copy/move constructors/assignments
     PageFrameAllocator(PageFrameAllocator&& other) = delete;
